@@ -1,0 +1,94 @@
+Build a fully responsive, professional website for a Discord community called Hiverse.
+The site should have a dark, multiverse aesthetic with dark blue, blue, and black as main colors. The UI should look sleek, clean, and professional with subtle animations and smooth transitions.
+
+🧭 Navbar:
+
+Logo centered at the top, shaped as a circle, with navigation links on left and right of the logo, like a professional game navbar.
+
+Subtle blue aura around the logo, no flashy rainbow effects.
+
+Links: Home, About, Giveaways, Features, Join Us.
+
+Navbar fixed on scroll, clean design, subtle hover effects.
+
+🌌 Home Section:
+
+Background: dark galaxy/multiverse with subtle particles.
+
+Hiverse name in sleek typography, centered.
+
+Join Now button linking to https://discord.gg/JQ9RyTvE8w, minimal glow for CTA.
+
+Smooth entrance animation, slight parallax optional.
+
+👑 About Section:
+
+Owners: Kuzma and Hamza, shown in round profile cards, clean layout, minimal glow border.
+
+Include name, role (“Founder of Hiverse”), short description.
+
+Profile data editable in code.
+
+🎁 Giveaways Section:
+
+Section with cards showing ongoing/past giveaways, clean professional layout.
+
+Each card: image, title, description, Join Giveaway button.
+
+Back-Office for Admins:
+
+Hidden in footer bottom-left as “Giveaways Admin” button.
+
+Opens password popup; password = Hiverse2025.
+
+Admin panel allows:
+
+Add New Giveaway: title, description, image URL, end date/time
+
+End Giveaway: list active giveaways, end them manually
+
+Adding/ending giveaways triggers Discord webhook to post info in the server automatically (title, description, image).
+
+Clean, minimal design matching the professional multiverse theme.
+
+⚙️ Features Section:
+
+List key features with small icons & subtle accent color:
+
+Active Community
+
+Frequent Giveaways
+
+Events & Contests
+
+Partnership Opportunities
+
+Multiverse-Themed Ranks & Roles
+
+Keep layout neat, grid/cards style, professional.
+
+💬 Discord Invite Popup:
+
+Every 10 minutes, show a bottom-left popup:
+
+Server name, member count, online members
+
+Join Now button to https://discord.gg/JQ9RyTvE8w
+
+Subtle fade-in/out animation, minimal design.
+
+📱 Responsiveness:
+
+Fully responsive across desktop, tablet, mobile.
+
+Navbar collapses to hamburger on small screens, logo stays centered.
+
+⚡ Tech / Style:
+
+Use HTML, CSS, JavaScript (or React if allowed).
+
+Subtle animations, smooth transitions, minimal effects.
+
+Focus on professional, sleek look, not over-the-top glowing or disco vibes.
+
+Back-office password, webhook system, admin controls fully integrated but hidden from regular users.
