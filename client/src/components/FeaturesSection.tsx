@@ -4,8 +4,8 @@ import { Users, Gift, Trophy, Handshake, Star } from "lucide-react";
 const features = [
   {
     icon: Users,
-    title: "Active Community",
-    description: "Join thousands of active members engaging in daily conversations and activities.",
+    title: "Strong Universe",
+    description: "Join active members engaging in daily conversations and activities.",
   },
   {
     icon: Gift,

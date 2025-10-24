@@ -10,18 +10,22 @@ export const giveaways = pgTable("giveaways", {
   imageUrl: text("image_url").notNull(),
   endDate: timestamp("end_date", { withTimezone: true }).notNull(),
   isActive: boolean("is_active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(sql`now()`),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .default(sql`now()`),
 });
 
+// ✅ Schema for inserting a giveaway
 export const insertGiveawaySchema = createInsertSchema(giveaways).omit({
   id: true,
   createdAt: true,
 });
 
+// ✅ Type definitions
 export type InsertGiveaway = z.infer<typeof insertGiveawaySchema>;
 export type Giveaway = typeof giveaways.$inferSelect;
 
-// Admin authentication type
+// ✅ Admin auth schema
 export const adminVerifySchema = z.object({
   password: z.string(),
 });

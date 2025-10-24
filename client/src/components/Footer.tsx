@@ -15,7 +15,7 @@ export function Footer() {
             <div>
               <h3 className="text-xl font-bold text-foreground mb-4">Hiverse</h3>
               <p className="text-muted-foreground text-sm">
-                A premium Discord community featuring giveaways, events, and exclusive content.
+               Made with ❤ By Kuzma.
               </p>
             </div>
 

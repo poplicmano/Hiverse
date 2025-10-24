@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Gift, Calendar } from "lucide-react";
 import type { Giveaway } from "@shared/schema";
+import { SiDiscord } from "react-icons/si";
 
 export function GiveawaysSection() {
   const { data: giveaways, isLoading } = useQuery<Giveaway[]>({
@@ -22,85 +23,20 @@ export function GiveawaysSection() {
             Active <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Giveaways</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join our exciting giveaways and stand a chance to win amazing prizes!
+            Join us for giveaways and get a chance to win awesome prizes every week! It’s super easy to participate, fun to be part of the community, and you never know—you might be the next lucky winner. Don’t miss out on the excitement and rewards!
           </p>
+          
+          <a
+                          href="https://discord.gg/JQ9RyTvE8w"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="default" className="w-full sm:w-auto" data-testid="button-join-footer">
+                            <SiDiscord className="mr-2 h-5 w-5" />
+                            Join Discord
+                          </Button>
+                        </a>
         </div>
-
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <Skeleton className="h-48 w-full rounded-lg mb-4" />
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-full" />
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        ) : activeGiveaways.length === 0 ? (
-          <Card className="max-w-2xl mx-auto">
-            <CardContent className="py-12 text-center">
-              <Gift className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-xl font-semibold mb-2 text-foreground">No Active Giveaways</h3>
-              <p className="text-muted-foreground">
-                Check back soon for new giveaways or join our Discord to stay updated!
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {activeGiveaways.map((giveaway, index) => (
-              <Card
-                key={giveaway.id}
-                className="group hover-elevate overflow-hidden transition-all duration-300 hover:scale-105"
-                data-testid={`card-giveaway-${index}`}
-              >
-                <div className="aspect-video overflow-hidden">
-                  <img
-                    src={giveaway.imageUrl}
-                    alt={giveaway.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    data-testid={`img-giveaway-${index}`}
-                  />
-                </div>
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-xl" data-testid={`text-giveaway-title-${index}`}>
-                      {giveaway.title}
-                    </CardTitle>
-                    <Badge variant="default" data-testid={`badge-active-${index}`}>
-                      Active
-                    </Badge>
-                  </div>
-                  <CardDescription className="line-clamp-2" data-testid={`text-giveaway-description-${index}`}>
-                    {giveaway.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span data-testid={`text-giveaway-enddate-${index}`}>
-                      Ends {new Date(giveaway.endDate).toLocaleDateString()}
-                    </span>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <a
-                    href="https://discord.gg/JQ9RyTvE8w"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full"
-                  >
-                    <Button className="w-full" variant="default" data-testid={`button-join-giveaway-${index}`}>
-                      Join Giveaway
-                    </Button>
-                  </a>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
 
         {pastGiveaways.length > 0 && (
           <div className="mt-16">

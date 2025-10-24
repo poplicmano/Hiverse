@@ -41,17 +41,21 @@ export function Navbar() {
 
           {/* Centered Logo */}
           <div className="flex items-center justify-center">
-            <div className="relative group">
-              <div className="absolute -inset-2 bg-primary/20 rounded-full blur-xl group-hover:bg-primary/30 transition-all duration-300" />
-              <button
-                onClick={() => scrollToSection("home")}
-                className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary via-primary/90 to-primary/70 flex items-center justify-center border-2 border-primary/50 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
-                data-testid="logo-button"
-              >
-                <span className="text-2xl font-bold text-primary-foreground">H</span>
-              </button>
-            </div>
-          </div>
+  <div className="relative group">
+    <div className="absolute -inset-2 bg-primary/20 rounded-full blur-xl group-hover:bg-primary/30 transition-all duration-300" />
+    <button
+      onClick={() => scrollToSection("home")}
+      className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary via-primary/90 to-primary/70 flex items-center justify-center border-2 border-primary/50 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+      data-testid="logo-button"
+    >
+      <img 
+        src="/HiverseLogo.png" 
+        alt="Hiverse Logo" 
+        className="w-30 h-30 object-contain" 
+      />
+    </button>
+  </div>
+</div>
 
           {/* Right nav links - Desktop only */}
           <div className="hidden md:flex items-center gap-6 flex-1 ml-8">
