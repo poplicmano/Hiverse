@@ -14,17 +14,17 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: 220 5% 96%;
+  --background: 230 20% 95%;
 
-  --foreground: 220 8% 12%;
+  --foreground: 230 15% 15%;
 
-  --border: 220 6% 85%;
+  --border: 230 15% 80%;
 
-  --card: 220 5% 94%;
+  --card: 230 20% 98%;
 
-  --card-foreground: 220 8% 12%;
+  --card-foreground: 230 15% 15%;
 
-  --card-border: 220 6% 88%;
+  --card-border: 230 15% 85%;
 
   --sidebar: 220 5% 92%;
 
@@ -48,9 +48,9 @@
 
   --popover-border: 220 6% 80%;
 
-  --primary: 217 91% 32%;
+  --primary: 220 85% 55%;
 
-  --primary-foreground: 217 91% 98%;
+  --primary-foreground: 220 100% 98%;
 
   --secondary: 220 8% 86%;
 
@@ -76,7 +76,7 @@
   --chart-4: 185 68% 20%;
   --chart-5: 175 58% 18%;
 
-  --font-sans: Open Sans, sans-serif;
+  --font-sans: Inter, system-ui, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: .5rem; /* 8px */
@@ -132,17 +132,17 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 220 5% 8%;
+  --background: 230 40% 8%;
 
-  --foreground: 220 5% 92%;
+  --foreground: 220 20% 95%;
 
-  --border: 220 5% 18%;
+  --border: 230 30% 18%;
 
-  --card: 220 5% 10%;
+  --card: 230 35% 10%;
 
-  --card-foreground: 220 5% 92%;
+  --card-foreground: 220 20% 95%;
 
-  --card-border: 220 5% 16%;
+  --card-border: 230 30% 16%;
 
   --sidebar: 220 5% 12%;
 
@@ -166,9 +166,9 @@
 
   --popover-border: 220 5% 22%;
 
-  --primary: 217 91% 28%;
+  --primary: 220 90% 60%;
 
-  --primary-foreground: 217 91% 98%;
+  --primary-foreground: 230 40% 10%;
 
   --secondary: 220 8% 18%;
 
