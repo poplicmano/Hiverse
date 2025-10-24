@@ -39,6 +39,7 @@ export class MemStorage implements IStorage {
       this.giveaways.set(id, {
         ...giveaway,
         id,
+        isActive: giveaway.isActive ?? true,
         createdAt: new Date(),
       });
     }
@@ -59,6 +60,7 @@ export class MemStorage implements IStorage {
     const giveaway: Giveaway = {
       ...insertGiveaway,
       id,
+      isActive: insertGiveaway.isActive ?? true,
       createdAt: new Date(),
     };
     this.giveaways.set(id, giveaway);

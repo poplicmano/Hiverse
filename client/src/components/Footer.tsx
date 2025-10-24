@@ -30,6 +30,7 @@ export function Footer() {
                         element?.scrollIntoView({ behavior: "smooth" });
                       }}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      data-testid={`link-footer-${link.toLowerCase()}`}
                     >
                       {link}
                     </button>

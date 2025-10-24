@@ -6,28 +6,21 @@ import { SiDiscord } from "react-icons/si";
 
 export function DiscordPopup() {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasShown, setHasShown] = useState(false);
 
   useEffect(() => {
-    if (hasShown) return;
-
-    const timer = setTimeout(() => {
+    const showPopup = () => {
       setIsVisible(true);
-      setHasShown(true);
-    }, 10 * 60 * 1000); // 10 minutes
+    };
 
-    return () => clearTimeout(timer);
-  }, [hasShown]);
+    const initialTimer = setTimeout(showPopup, 10 * 60 * 1000); // Show after 10 minutes
 
-  useEffect(() => {
-    if (!isVisible || !hasShown) return;
+    const recurringInterval = setInterval(showPopup, 10 * 60 * 1000); // Show every 10 minutes
 
-    const interval = setInterval(() => {
-      setIsVisible(true);
-    }, 10 * 60 * 1000); // Show every 10 minutes
-
-    return () => clearInterval(interval);
-  }, [isVisible, hasShown]);
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(recurringInterval);
+    };
+  }, []);
 
   if (!isVisible) return null;
 

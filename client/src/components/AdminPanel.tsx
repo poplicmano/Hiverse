@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { Giveaway, InsertGiveaway } from "@shared/schema";
+import { insertGiveawaySchema, adminVerifySchema, type Giveaway, type InsertGiveaway, type AdminVerify } from "@shared/schema";
 import { Loader2, Plus, XCircle } from "lucide-react";
+import { z } from "zod";
 
 interface AdminPanelProps {
   open: boolean;
@@ -20,12 +24,18 @@ interface AdminPanelProps {
 
 export function AdminPanel({ open, onOpenChange, onAuthenticated }: AdminPanelProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
   const { toast } = useToast();
 
+  const passwordForm = useForm<AdminVerify>({
+    resolver: zodResolver(adminVerifySchema),
+    defaultValues: {
+      password: "",
+    },
+  });
+
   const verifyMutation = useMutation({
-    mutationFn: async (password: string) => {
-      const response = await apiRequest("POST", "/api/admin/verify", { password });
+    mutationFn: async (data: AdminVerify) => {
+      const response = await apiRequest("POST", "/api/admin/verify", data);
       return response;
     },
     onSuccess: () => {
@@ -35,6 +45,7 @@ export function AdminPanel({ open, onOpenChange, onAuthenticated }: AdminPanelPr
         title: "Authenticated",
         description: "Welcome to the admin panel",
       });
+      passwordForm.reset();
     },
     onError: () => {
       toast({
@@ -45,9 +56,8 @@ export function AdminPanel({ open, onOpenChange, onAuthenticated }: AdminPanelPr
     },
   });
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    verifyMutation.mutate(password);
+  const handlePasswordSubmit = (data: AdminVerify) => {
+    verifyMutation.mutate(data);
   };
 
   if (!isAuthenticated) {
@@ -60,28 +70,37 @@ export function AdminPanel({ open, onOpenChange, onAuthenticated }: AdminPanelPr
               Enter the admin password to access the giveaway management panel.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
-                data-testid="input-admin-password"
+          <Form {...passwordForm}>
+            <form onSubmit={passwordForm.handleSubmit(handlePasswordSubmit)} className="space-y-4">
+              <FormField
+                control={passwordForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter admin password"
+                        data-testid="input-admin-password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={verifyMutation.isPending}
-              data-testid="button-admin-submit"
-            >
-              {verifyMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Submit
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={verifyMutation.isPending}
+                data-testid="button-admin-submit"
+              >
+                {verifyMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Submit
+              </Button>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     );
@@ -116,15 +135,24 @@ export function AdminPanel({ open, onOpenChange, onAuthenticated }: AdminPanelPr
   );
 }
 
+const giveawayFormSchema = insertGiveawaySchema.extend({
+  endDate: z.string().min(1, "End date is required"),
+}).omit({ isActive: true });
+
+type GiveawayFormData = z.infer<typeof giveawayFormSchema>;
+
 function AddGiveawayForm() {
-  const [formData, setFormData] = useState<InsertGiveaway>({
-    title: "",
-    description: "",
-    imageUrl: "",
-    endDate: new Date(),
-    isActive: true,
-  });
   const { toast } = useToast();
+
+  const form = useForm<GiveawayFormData>({
+    resolver: zodResolver(giveawayFormSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      imageUrl: "",
+      endDate: "",
+    },
+  });
 
   const addMutation = useMutation({
     mutationFn: async (data: InsertGiveaway) => {
@@ -136,13 +164,7 @@ function AddGiveawayForm() {
         title: "Giveaway Added",
         description: "The giveaway has been created and posted to Discord",
       });
-      setFormData({
-        title: "",
-        description: "",
-        imageUrl: "",
-        endDate: new Date(),
-        isActive: true,
-      });
+      form.reset();
     },
     onError: () => {
       toast({
@@ -153,72 +175,102 @@ function AddGiveawayForm() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    addMutation.mutate(formData);
+  const handleSubmit = (data: GiveawayFormData) => {
+    const giveaway: InsertGiveaway = {
+      ...data,
+      endDate: new Date(data.endDate),
+      isActive: true,
+    };
+    addMutation.mutate(giveaway);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 py-4">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          id="title"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          placeholder="Giveaway title"
-          required
-          data-testid="input-giveaway-title"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 py-4">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Giveaway title"
+                  data-testid="input-giveaway-title"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          placeholder="Giveaway description"
-          required
-          data-testid="input-giveaway-description"
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Giveaway description"
+                  data-testid="input-giveaway-description"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="imageUrl">Image URL</Label>
-        <Input
-          id="imageUrl"
-          value={formData.imageUrl}
-          onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-          placeholder="https://example.com/image.jpg"
-          required
-          data-testid="input-giveaway-image"
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="https://example.com/image.jpg"
+                  data-testid="input-giveaway-image"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="endDate">End Date</Label>
-        <Input
-          id="endDate"
-          type="datetime-local"
-          value={formData.endDate instanceof Date ? formData.endDate.toISOString().slice(0, 16) : ""}
-          onChange={(e) => setFormData({ ...formData, endDate: new Date(e.target.value) })}
-          required
-          data-testid="input-giveaway-enddate"
+        <FormField
+          control={form.control}
+          name="endDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>End Date</FormLabel>
+              <FormControl>
+                <Input
+                  type="datetime-local"
+                  data-testid="input-giveaway-enddate"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={addMutation.isPending}
-        data-testid="button-add-giveaway"
-      >
-        {addMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        <Plus className="mr-2 h-4 w-4" />
-        Add Giveaway
-      </Button>
-    </form>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={addMutation.isPending}
+          data-testid="button-add-giveaway"
+        >
+          {addMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Plus className="mr-2 h-4 w-4" />
+          Add Giveaway
+        </Button>
+      </form>
+    </Form>
   );
 }
 
@@ -271,8 +323,8 @@ function ManageGiveaways() {
       {activeGiveaways.map((giveaway, index) => (
         <Card key={giveaway.id} data-testid={`card-manage-giveaway-${index}`}>
           <CardHeader>
-            <CardTitle>{giveaway.title}</CardTitle>
-            <CardDescription>
+            <CardTitle data-testid={`text-manage-giveaway-title-${index}`}>{giveaway.title}</CardTitle>
+            <CardDescription data-testid={`text-manage-giveaway-date-${index}`}>
               Ends {new Date(giveaway.endDate).toLocaleDateString()}
             </CardDescription>
           </CardHeader>
